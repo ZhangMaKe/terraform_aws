@@ -33,7 +33,7 @@ EOF
 }
 
 resource "aws_lambda_function" "terraform_lambda" {
-  filename      = "../function_code/lambda.py.zip"
+  filename      = "lambda.py.zip"
   function_name = "terraform_test_function"
   role          = aws_iam_role.terraform_test_lambda_role.arn
   handler       = "lambda.handler"
