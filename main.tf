@@ -1,3 +1,13 @@
+terraform {
+  backend "remote" {
+    organization = "zhangmake-dev"
+
+    workspaces {
+      name = "terraform_aws"
+    }
+  }
+}
+
 provider "aws" {
   profile = "default"
   region  = var.region
@@ -22,17 +32,13 @@ resource "aws_iam_role" "terraform_test_lambda_role" {
 EOF
 }
 
-provider "aws" {
-  profile = "default"
-  region  = var.region
-}
-
 resource "aws_lambda_function" "terraform_lambda" {
   filename      = "../function_code/lambda.py.zip"
   function_name = "terraform_test_function"
-  role          = module.iam.terraform_test_lambda_role_arn
+  role          = aws_iam_role.terraform_test_lambda_role.arn
   handler       = "lambda.handler"
   runtime       = "python3.7"
+}
 
 output "terraform_test_lambda_role_arn" {
   value = aws_iam_role.terraform_test_lambda_role.arn
